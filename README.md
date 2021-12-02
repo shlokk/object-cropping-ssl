@@ -1,8 +1,6 @@
 # object-cropping-ssl
 This repo contains the code for the paper "Object-cropping for SSL".
 
-Here is the link to the paper.
-https://drive.google.com/file/d/13340PTNn7z0zHvnPvhnwGfGtoBISpG5X/view?usp=sharing
 
 Step1: Creating the dataset.
 
