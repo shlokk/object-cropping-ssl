@@ -1,18 +1,18 @@
-This repo contains the code code for paper: Object-Aware Cropping for Self-Supervised Learning (https://arxiv.org/pdf/2112.00319).
+This repo contains the code code for paper: **Object-Aware Cropping for Self-Supervised Learning (https://arxiv.org/pdf/2112.00319).**
 
 
-Creating the dataset.
+**Creating the dataset.**
 
 Download the five dicts from this folder and put them in the main repo.
 https://drive.google.com/drive/folders/1IZTZDqcdSbjOFT1rBBGLLdjhZv5ZmthM?usp=sharing
 
 Follow create_data.sh to download openimages dataset.
 
-Details of the OpenImages Subset dataset:
+**Details of the OpenImages Subset dataset:**
 OpenImages subset dataset was created to test the performace of SSL methods on more realistic and harder setup as compared to standard bechmarks such as ImageNet. We sample images with objects from at least 2 distinct classes to create a dataset that better reflects real-world uncurated data. Secondly we only consider class categories with at least 900 images to mitigate effects of imbalanced class distribution. After this processing, we have 212,753 images present across 208 classes and approximately 12 objects per image on average. Further details can be found in the paper.
 
 We provide labels and other information of these images in images_selected_new.npy and images_selected_with_all_features.npy dicts.
-Desciption of the dicts:
+**Desciption of the dicts:**
 1) images_selected_new.npy can be loaded as images_selected = np.load('images_selected_new.npy', allow_pickle='TRUE').item(). 
     * The keys in this dict is the image name and the values are the classes.  
     * This dict can be used for multi-class classification task on OpenImages subset.
