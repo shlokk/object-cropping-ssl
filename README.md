@@ -1,7 +1,7 @@
 This repo contains the code code for paper: Object-Aware Cropping for Self-Supervised Learning (https://arxiv.org/pdf/2112.00319).
 
 
-Step1: Creating the dataset.
+Creating the dataset.
 
 Download the five dicts from this folder and put them in the main repo.
 https://drive.google.com/drive/folders/1IZTZDqcdSbjOFT1rBBGLLdjhZv5ZmthM?usp=sharing
