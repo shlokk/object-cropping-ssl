@@ -198,7 +198,7 @@ def main_worker(gpu, ngpus_per_node, args):
     model = moco.builder.MoCo(
         models.__dict__[args.arch],
         args.moco_dim, args.moco_k, args.moco_m, args.moco_t, args.mlp)
-    # print(model)
+    print(model)
 
     if args.distributed:
         # For multiprocessing distributed, DistributedDataParallel constructor
@@ -241,21 +241,6 @@ def main_worker(gpu, ngpus_per_node, args):
             print("=> loading checkpoint '{}'".format(args.resume))
             if args.gpu is None:
                 checkpoint = torch.load(args.resume)
-                # new_dict = model.state_dict()
-                # # loc = 'cuda:{}'.format(args.gpu)
-                # pretrained_weights = torch.load(args.resume)['state_dict']
-                # # print(pretrained_weights)
-                # for k, v in pretrained_weights.items():
-                #     print(k)
-                #     k = k.replace('conv.', '')
-                #     k = k.replace('module.', '')
-                #     if k in model.state_dict().keys():
-                #         # print("found")
-                #         # print(k)
-                #
-                #         new_dict[k] = v
-
-                # model.load_state_dict(new_dict)
             else:
                 # Map model to be loaded to specified single gpu. map_location=loc
                 loc = 'cuda:{}'.format(args.gpu)
@@ -271,8 +256,6 @@ def main_worker(gpu, ngpus_per_node, args):
 
     cudnn.benchmark = True
 
-    # Data loading code
-    traindir = os.path.join(args.data)
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
     if args.aug_plus:
@@ -299,29 +282,14 @@ def main_worker(gpu, ngpus_per_node, args):
             normalize
         ]
 
-    # train_dataset = datasets.ImageFolder(
-    #     traindir,
-    #     moco.loader.TwoCropsTransform(transforms.Compose(augmentation)))
 
-    if args.full_dataset==True:
-        # print("here")
-        # print(args)
-        train_dataset,_ = get_trainval_datasets('openimages_full_dataset',256,radius=args.random_seperated_crops_distance,args=args)
-    elif args.full_dataset_indivual_object == True:
-        train_dataset, validate_dataset = get_trainval_datasets('openimages_full_dataset_indivual_object', 256)
-    elif args.rescale_crops_before == True:
-        train_dataset, validate_dataset = get_trainval_datasets('openimages_rescale_crops_before', 256,rescale_parameter=args.rescale_parameter)
-    elif args.random_seperated_crops == True:
-        train_dataset, validate_dataset = get_trainval_datasets('openimages_random_seperated_crops', 256,
-                                                                rescale_parameter=args.rescale_parameter,radius=args.random_seperated_crops_distance,args=args)
-    elif args.bing_crops == True:
+
+    if args.bing_crops == True:
         train_dataset, validate_dataset = get_trainval_datasets('bing_crops', 256,
                                                                 rescale_parameter=args.rescale_parameter,radius=args.random_seperated_crops_distance,args=args)
     else:
         print("in baseline")
         train_dataset = get_trainval_datasets('openimages', 256,args)
-
-    print(args.full_dataset,args.full_dataset_indivual_object)
 
 
     if args.distributed:
@@ -364,14 +332,10 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
     # switch to train mode
     model.train()
-    print("in train")
-    mean_list = []
-    mean_list_negative = []
+
     end = time.time()
     for i, (images1,images2) in enumerate(train_loader):
-        # print("in train 2")
-        # measure data loading time
-        # print(images1.shape,images2.shape)
+
         data_time.update(time.time() - end)
         # print(args.gpu)
 
@@ -379,13 +343,11 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         images1 = images1.cuda(args.gpu, non_blocking=True)
         images2 = images2.cuda(args.gpu, non_blocking=True)
 
-        # compute output
-        # output, target,mean,mean_neg = model(im_q=images1, im_k=images2)
+
         output, target = model(im_q=images1, im_k=images2)
         loss = criterion(output, target)
 
-        # mean_list.append(mean.cpu().detach().numpy())
-        # mean_list_negative.append(mean_neg.cpu().detach().numpy())
+
         # acc1/acc5 are (K+1)-way contrast classifier accuracy
         # measure accuracy and record loss
         acc1, acc5 = accuracy(output, target, topk=(1, 5))
@@ -404,14 +366,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
         if i % args.print_freq == 0:
             progress.display(i)
-    # print('mean ' +str(sum(mean_list)/len(mean_list)) )
-    # print('mean negtaive' + str(sum(mean_list_negative) / len(mean_list_negative)))
-
-# def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
-#     torch.save(state, filename)
-#     if is_best:
-#         shutil.copyfile(filename, 'checkpoint_openimages_with_fulldataset_objects_best.pth.tar')
-
+  
 def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
     # filename = 'checkpoint_'+str(save_name)+'.pth.tar'
     torch.save(state, filename)
