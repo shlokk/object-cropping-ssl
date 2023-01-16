@@ -366,7 +366,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
         if i % args.print_freq == 0:
             progress.display(i)
-  
+
 def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
     # filename = 'checkpoint_'+str(save_name)+'.pth.tar'
     torch.save(state, filename)
