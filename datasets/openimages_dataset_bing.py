@@ -117,7 +117,7 @@ class OpenImages(Dataset):
                         transforms.ToTensor(),
                         normalize,
                     ])
-        
+
         self.transform_random = transforms.Compose([
             transforms.RandomResizedCrop(224, scale=(self.rescale_parameter, 1)),
             transforms.RandomApply([
@@ -207,65 +207,6 @@ class OpenImages(Dataset):
 
     def __len__(self):
         return len(self.images)
-    def extracy_bbox(self, crop_image_dict, height, img_id, width, dilation = 0.0):
-        if dilation>0:
-            width1 = int(float(crop_image_dict[img_id][0]))
-            height1 = int(float(crop_image_dict[img_id][1]))
-            width2 = int(float(crop_image_dict[img_id][2]))
-            height2 = int(float(crop_image_dict[img_id][3]))
-            width1 = width1 + int(width1 * dilation)
-            height1 = height1 + int(height1 * dilation)
-            width2 = width2 + int(width2 * dilation)
-            height2 = height2 + int(height2 * dilation)
-        else:
-            width1 = int(float(crop_image_dict[img_id][0]))
-            height1 = int(float(crop_image_dict[img_id][1]))
-            width2 = int(float(crop_image_dict[img_id][2]))
-            height2 = int(float(crop_image_dict[img_id][3]))
-        diff = width2 - width1
-        final_width = 224
-        # import pdb
-        # pdb.set_trace()
-        # print("initial")
-        # print(width1,height1,width2,height2)
-        if diff < final_width:
-            # pdb.set_trace()
-            if width1 - final_width / 2 > 0:
-                width1 = width1 - final_width / 2
-            else:
-                width1 = 0
-                width2 = 224
-
-            if width2 + final_width / 2 < width:
-                width2 = width2 + final_width / 2
-            else:
-                # width1 = 0
-                # width2 = 224
-                width1 = width2 - 224
-        diff = height2 - height1
-        if diff < 224:
-            if height1 - final_width / 2 > 0:
-                height1 = height1 - final_width / 2
-                # height2 = height1 + final_width
-            else:
-                height1 = 0
-                height2 = 224
-
-            if height2 + final_width / 2 < height:
-                height2 = height2 + final_width / 2
-            else:
-                height1 = height2 - 224
-            # img.save("img_orig.jpeg")
-            if width2 > width:
-                width2 = width
-            if height2 > height:
-                height2 = height
-        if width2 > width:
-            width2 = width
-        if height2 > height:
-            height2 = height
-        return height1, height2, width1, width2
-
 
 if __name__ == '__main__':
     ds = AircraftDataset('test', 448)
