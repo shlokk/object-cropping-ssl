@@ -40,12 +40,13 @@ python main_moco_openimages.py path_to_openimages_dowloaded_dataset -a resnet50 
 ## BibTeX
 
 ```
-@misc{mishra2021objectaware,
-      title={Object-Aware Cropping for Self-Supervised Learning}, 
-      author={Shlok Mishra and Anshul Shah and Ankan Bansal and Abhyuday Jagannatha and Abhishek Sharma and David Jacobs and Dilip Krishnan},
-      year={2021},
-      eprint={2112.00319},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
+@article{
+mishra2022objectaware,
+title={Object-aware Cropping for Self-Supervised Learning},
+author={Shlok Kumar Mishra and Anshul Shah and Ankan Bansal and Janit K Anjaria and Abhyuday Narayan Jagannatha and Abhishek Sharma and David Jacobs and Dilip Krishnan},
+journal={Transactions on Machine Learning Research},
+year={2022},
+url={https://openreview.net/forum?id=WXgJN7A69g},
+note={}
 }
 ```
