@@ -1,5 +1,10 @@
 This repo contains the pytorch implementation of the paper: **Object-Aware Cropping for Self-Supervised Learning (https://openreview.net/forum?id=WXgJN7A69g).**
 
+
+<p align="center">
+  <img src="teasure_figure_tmlr.png" width="650" title="hover text">
+</p>
+
 ```
 @article{
 mishra2022objectaware,
