@@ -39,17 +39,6 @@ class OpenImages(Dataset):
         self.resize = resize
         self.DATAPATH = args.DATAPATH
 
-        variants_dict = {}
-        # with open(os.path.join(DATAPATH, 'variants.txt'), 'r') as f:
-        #     for idx, line in enumerate(f.readlines()):
-        #         variants_dict[line.strip()] = idx
-        # self.num_classes = len(variants_dict)
-        #
-        # if self.phase == 'train':
-        #     list_path = os.path.join(DATAPATH, 'images_variant_trainval.txt')
-        # else:
-        #     list_path = os.path.join(DATAPATH, 'images_variant_test.txt')
-
         self.images = []
         self.labels = []
         self.labels_to_idx = {}
@@ -70,25 +59,7 @@ class OpenImages(Dataset):
                 if l not in self.labels_to_idx.keys():
                     self.labels_to_idx[l] = cnt
                     cnt = cnt + 1
-            # print(images)
-            # if len(images_selected[images])==0:
-            #     print(images_selected[images])
-            # for images in images_selected_with_all_features[all_images]['data']:
-            #     self.images.append(all_images+'.jpg')
-            #     self.labels.append(images_selected[all_images])
-            #     self.bbox.append(images)
-            #     for l in images_selected[all_images]:
-            #         if l not in self.labels_to_idx.keys():
-            #             self.labels_to_idx[l] = cnt
-            #             cnt = cnt + 1
-        # with open(list_path, 'r') as f:
-        #     for line in f.readlines():
-        #         fname_and_variant = line.strip()
-        #         self.images.append(fname_and_variant[:FILENAME_LENGTH])
-        #         self.labels.append(variants_dict[fname_and_variant[FILENAME_LENGTH + 1:]])
 
-        # transform
-        # self.transform = get_transform(self.resize, self.phase)
         for images in images_selected_test.keys():
             self.images_test.append(images+'.jpg')
             self.labels_test.append(images_selected_test[images])
@@ -128,15 +99,6 @@ class OpenImages(Dataset):
         # image
         # print(os.path.join(DATAPATH, self.images[item]))
         image_orig = Image.open(os.path.join(self.DATAPATH, self.images[item])).convert('RGB')  # (C, H, W)
-        # width, height = image_orig.size
-        # # xmin,ymin,xmax,ymax = self.bbox[items][4],self.bbox[items][5],self.bbox[items][6],self.bbox[items][7]
-        # print(self.bbox[item][4]*width)
-        # crop_box = (self.bbox[item][4]*width,self.bbox[item][5]*height,self.bbox[item][6]*width,self.bbox[item][7]*height)
-        # print(crop_box)
-        # crop_box = map(int, crop_box)
-        # print(crop_box)
-        # # image = self.transform(image)
-        # image_orig = image_orig.crop((crop_box))
         labes_one_hot = [0] * len(self.labels_to_idx)
 
         if self.phase == 'train':

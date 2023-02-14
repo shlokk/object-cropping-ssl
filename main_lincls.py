@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
+
 import argparse
 import builtins
 import os
@@ -216,7 +215,6 @@ def main_worker(gpu, ngpus_per_node, args):
             model = torch.nn.DataParallel(model).cuda()
 
     # define loss function (criterion) and optimizer
-    # criterion = nn.CrossEntropyLoss().cuda(args.gpu)
     criterion = torch.nn.BCEWithLogitsLoss().cuda(args.gpu)
 
     # optimize only the linear classifier
@@ -250,22 +248,9 @@ def main_worker(gpu, ngpus_per_node, args):
 
     cudnn.benchmark = True
 
-    # Data loading code
-    traindir = os.path.join(args.data, 'train')
-    valdir = os.path.join(args.data, 'val')
-    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                     std=[0.229, 0.224, 0.225])
 
-    # train_dataset = datasets.ImageFolder(
-    #     traindir,
-    #     transforms.Compose([
-    #         transforms.RandomResizedCrop(224),
-    #         transforms.RandomHorizontalFlip(),
-    #         transforms.ToTensor(),
-    #         normalize,
-    #     ]))
-    train_dataset, _ = get_trainval_datasets('openimages_lin', 256,args=args)
-    validate_dataset = OpenImagesTestLoader(phase='val', resize=256)
+    train_dataset, _ = get_trainval_datasets('openimages_lin', 256, args=args)
+    validate_dataset = OpenImagesTestLoader(phase='val', resize=256 , args=args)
     print(len(validate_dataset),len(train_dataset))
 
     if args.distributed:
@@ -281,20 +266,6 @@ def main_worker(gpu, ngpus_per_node, args):
         validate_dataset,
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True)
-
-    # train_loader = torch.utils.data.DataLoader(
-    #     train_dataset, batch_size=args.batch_size, shuffle=(train_sampler is None),
-    #     num_workers=args.workers, pin_memory=True, sampler=train_sampler)
-    #
-    # val_loader = torch.utils.data.DataLoader(
-    #     datasets.ImageFolder(valdir, transforms.Compose([
-    #         transforms.Resize(256),
-    #         transforms.CenterCrop(224),
-    #         transforms.ToTensor(),
-    #         normalize,
-    #     ])),
-    #     batch_size=args.batch_size, shuffle=False,
-    #     num_workers=args.workers, pin_memory=True)
 
     if args.evaluate:
         validate(val_loader, model, criterion, args)
@@ -421,14 +392,7 @@ def validate(val_loader, model, criterion, args):
             output = model(images)
             loss = criterion(output, target)
 
-            # measure accuracy and record loss
-            # acc1, acc5 = accuracy(output, target, topk=(1, 5))
-            # losses.update(loss.item(), images.size(0))
-            # top1.update(acc1[0], images.size(0))
-            # top5.update(acc5[0], images.size(0))
             m_ap, w_ap, m_aps = map(output, target,all_class_map)
-            # import pdb
-            # pdb.set_trace()
             losses.update(loss.item(), images.size(0))
             top1.update(m_ap, images.size(0))
 
@@ -460,8 +424,7 @@ def map(submission_array, gt_array,all_class_map):
     gt_array = gt_array.cpu().detach().numpy()
     m_aps = []
     n_classes = submission_array.shape[1]
-    import pdb
-    # pdb.set_trace()
+
     for oc_i in range(n_classes):
         sorted_idxs = np.argsort(-submission_array[:, oc_i])
         tp = gt_array[:, oc_i][sorted_idxs] == 1
