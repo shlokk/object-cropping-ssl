@@ -68,6 +68,8 @@ Command to reproduce MoCo-v2 baseline performance:
 ```
 python main_moco_openimages.py path_to_openimages_dowloaded_dataset -a resnet50 --lr 0.015 --batch-size 128 --dist-url 'tcp://localhost:10005' --world-size 1 --rank 0  -j 8 --moco-t 0.2 --mlp --aug-plus --cos --save_name folder_to_save --multiprocessing-distributed
 ```
+###  Linear Probing
+
 Command for linear probing performance:
 
 ```
