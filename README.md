@@ -68,6 +68,11 @@ Command to reproduce MoCo-v2 baseline performance:
 ```
 python main_moco_openimages.py path_to_openimages_dowloaded_dataset -a resnet50 --lr 0.015 --batch-size 128 --dist-url 'tcp://localhost:10005' --world-size 1 --rank 0  -j 8 --moco-t 0.2 --mlp --aug-plus --cos --save_name folder_to_save --multiprocessing-distributed
 ```
+Command for linear probing performance:
+
+```
+python main_lincls.py -a resnet50 --lr 30.0 --batch-size 256 --epochs 100 --pretrained path_to_model --dist-url 'tcp://localhost:10005' --world-size 1 --rank 0  -j 8 --save_name folder_to_save --multiprocessing-distributed --DATAPATH path_to_data
+```
 
 ## BibTeX
 
